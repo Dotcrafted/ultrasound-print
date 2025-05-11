@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultrasound Print (6 per A4)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1{
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+
+    #print-area {
+      width: 210mm;
+      height: 297mm;
+      margin: auto;
+      padding: 10mm;
+      box-sizing: border-box;
+      page-break-inside: avoid;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 10mm;
+      height: 100%;
+    }
+
+    .photo-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      /* border: 1px solid #ccc; */
+      background: #f0f0f0;
+      overflow: hidden;
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: white;
+      flex: 1;
+    }
+
+    .upload-wrapper {
+      padding: 5px;
+      background: white;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .custom-file-upload {
+      display: inline-block;
+      padding: 6px 12px;
+      cursor: pointer;
+      background-color: #352effd4;
+      color: white;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+
+    .custom-file-upload:hover {
+      background-color: #1d026c;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #012f61;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #print-area, #print-area * {
+        visibility: visible;
+      }
+
+      .upload-wrapper,
+      button,
+      h1 {
+        display: none !important;
+      }
+
+      #print-area {
+        position: absolute;
+        top: 0;
+        left: 0;
+        page-break-after: avoid;
+      }
+
+      .photo-box {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🏥 Ultrasound Images</h1>
+
+  <div id="print-area">
+    <div class="photo-grid">
+      <div class="photo-box">
+        <img id="img0" />
+        <div class="upload-wrapper">
+          <label class="custom-file-upload">
+            📁 Choose Image
+            <input type="file" accept="image/*" onchange="previewImage(event, 0)" />
+          </label>
+        </div>
+      </div>
+      <div class="photo-box">
+        <img id="img1" />
+        <div class="upload-wrapper">
+          <label class="custom-file-upload">
+            📁 Choose Image
+            <input type="file" accept="image/*" onchange="previewImage(event, 1)" />
+          </label>
+        </div>
+      </div>
+      <div class="photo-box">
+        <img id="img2" />
+        <div class="upload-wrapper">
+          <label class="custom-file-upload">
+            📁 Choose Image
+            <input type="file" accept="image/*" onchange="previewImage(event, 2)" />
+          </label>
+        </div>
+      </div>
+      <div class="photo-box">
+        <img id="img3" />
+        <div class="upload-wrapper">
+          <label class="custom-file-upload">
+            📁 Choose Image
+            <input type="file" accept="image/*" onchange="previewImage(event, 3)" />
+          </label>
+        </div>
+      </div>
+      <div class="photo-box">
+        <img id="img4" />
+        <div class="upload-wrapper">
+          <label class="custom-file-upload">
+            📁 Choose Image
+            <input type="file" accept="image/*" onchange="previewImage(event, 4)" />
+          </label>
+        </div>
+      </div>
+      <div class="photo-box">
+        <img id="img5" />
+        <div class="upload-wrapper">
+          <label class="custom-file-upload">
+            📁 Choose Image
+            <input type="file" accept="image/*" onchange="previewImage(event, 5)" />
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button onclick="prepareAndPrint()">🖨️ Print Page</button>
+
+  <script>
+    function previewImage(event, index) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.getElementById("img" + index);
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function prepareAndPrint() {
+      for (let i = 0; i < 6; i++) {
+        const img = document.getElementById("img" + i);
+        const box = img.closest(".photo-box");
+        if (!img.src || img.src === window.location.href) {
+          box.style.display = "none";
+        } else {
+          box.style.display = "flex";
+        }
+      }
+      window.print();
+    }
+  </script>
+</body>
+</html>
